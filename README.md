@@ -36,4 +36,4 @@ const REQUIRED_URL = 'gmo-office.com/?#/searchCustome';
 2. `chrome://extensions/` で🔄ボタンをクリック
 3. ページをリフレッシュ
 
-バージョンアップは不要です。
+<img width="459" height="279" alt="スクリーンショット 2025-10-02 13 15 18" src="https://github.com/user-attachments/assets/7a2c79b9-bf3b-4f9f-bafc-278973962170" />
