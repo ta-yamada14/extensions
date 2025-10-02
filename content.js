@@ -1,6 +1,26 @@
+/****************************************************
+ * 設定エリア - ここだけ変更すればOK！
+ ****************************************************/
+
+// ハイライトする文字列のリスト
+const TARGET_WORDS = [
+  '個人顧客',
+  '2'
+];
+
+// 文字の色
+const HIGHLIGHT_COLOR = 'red';
+
+// URLに含まれている必要がある文字列（この文字列がURLにない場合は動作しない）
+const REQUIRED_URL = 'gmo-office';
+
+/****************************************************
+ * ここから下は変更不要
+ ****************************************************/
+
 (function() {
-  // URLにgmo-officeが含まれていない場合は何もしない
-  if (!window.location.href.includes('gmo-office')) {
+  // URLチェック
+  if (!window.location.href.includes(REQUIRED_URL)) {
     return;
   }
 
@@ -32,7 +52,8 @@
               return NodeFilter.FILTER_REJECT;
             }
             // 対象の文字が含まれているか
-            if (node.textContent.includes('個人顧客') || node.textContent.includes('2')) {
+            const hasTarget = TARGET_WORDS.some(word => node.textContent.includes(word));
+            if (hasTarget) {
               return NodeFilter.FILTER_ACCEPT;
             }
             return NodeFilter.FILTER_REJECT;
@@ -53,15 +74,18 @@
         const parent = textNode.parentElement;
         if (!parent || parent.hasAttribute('data-highlighted')) return;
 
-        const text = textNode.textContent;
-        const newHTML = text
-          .replace(/個人顧客/g, '<span style="color: red; font-weight: normal;" data-highlighted="true">個人顧客</span>')
-          .replace(/2/g, '<span style="color: red; font-weight: normal;" data-highlighted="true">2</span>');
+        let text = textNode.textContent;
+        
+        // 各対象文字列を赤文字に変換
+        TARGET_WORDS.forEach(word => {
+          const regex = new RegExp(word, 'g');
+          text = text.replace(regex, `<span style="color: ${HIGHLIGHT_COLOR}; font-weight: normal;" data-highlighted="true">${word}</span>`);
+        });
 
-        if (newHTML !== text) {
+        if (text !== textNode.textContent) {
           const wrapper = document.createElement('span');
           wrapper.setAttribute('data-highlighted', 'true');
-          wrapper.innerHTML = newHTML;
+          wrapper.innerHTML = text;
           parent.replaceChild(wrapper, textNode);
         }
       });
