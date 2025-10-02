@@ -32,7 +32,7 @@ const REQUIRED_URL = 'gmo-office.com/?#/searchCustome';
 
 ### 変更後の適用方法
 
-1. ファイルを保存
+1. 基本的にcontent.jsファイルを修正
 2. `chrome://extensions/` で🔄ボタンをクリック
 3. ページをリフレッシュ
 
