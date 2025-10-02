@@ -11,8 +11,11 @@ const TARGET_WORDS = [
 // 文字の色
 const HIGHLIGHT_COLOR = 'red';
 
+// 太文字にするか（true: 太文字, false: 通常）
+const USE_BOLD = true;
+
 // URLに含まれている必要がある文字列（この文字列がURLにない場合は動作しない）
-const REQUIRED_URL = 'gmo-office';
+const REQUIRED_URL = 'gmo-office.com/?#/searchCustome';
 
 /****************************************************
  * ここから下は変更不要
@@ -24,18 +27,14 @@ const REQUIRED_URL = 'gmo-office';
     return;
   }
 
-  console.log('拡張機能が動作中');
-
   let isProcessing = false;
 
   function highlightText() {
     if (isProcessing) {
-      console.log('処理中のためスキップ');
       return;
     }
     
     isProcessing = true;
-    console.log('テキストをハイライト開始');
     
     try {
       // TreeWalkerで全テキストノードを取得
@@ -67,8 +66,6 @@ const REQUIRED_URL = 'gmo-office';
         nodesToProcess.push(node);
       }
 
-      console.log('処理対象ノード数:', nodesToProcess.length);
-
       // 収集したノードを処理
       nodesToProcess.forEach(textNode => {
         const parent = textNode.parentElement;
@@ -76,10 +73,11 @@ const REQUIRED_URL = 'gmo-office';
 
         let text = textNode.textContent;
         
-        // 各対象文字列を赤文字に変換
+        // 各対象文字列をハイライト
+        const fontWeight = USE_BOLD ? 'bold' : 'normal';
         TARGET_WORDS.forEach(word => {
           const regex = new RegExp(word, 'g');
-          text = text.replace(regex, `<span style="color: ${HIGHLIGHT_COLOR}; font-weight: normal;" data-highlighted="true">${word}</span>`);
+          text = text.replace(regex, `<span style="color: ${HIGHLIGHT_COLOR}; font-weight: ${fontWeight};" data-highlighted="true">${word}</span>`);
         });
 
         if (text !== textNode.textContent) {
@@ -90,9 +88,8 @@ const REQUIRED_URL = 'gmo-office';
         }
       });
 
-      console.log('ハイライト完了');
     } catch (e) {
-      console.error('エラー:', e);
+      // エラーは無視
     } finally {
       isProcessing = false;
     }
@@ -101,15 +98,16 @@ const REQUIRED_URL = 'gmo-office';
   // 初回実行
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(highlightText, 500);
+      setTimeout(highlightText, 100);
     });
   } else {
-    setTimeout(highlightText, 500);
+    setTimeout(highlightText, 100);
   }
 
   // React Adminの遅延レンダリング対応
+  setTimeout(highlightText, 500);
+  setTimeout(highlightText, 1000);
   setTimeout(highlightText, 2000);
-  setTimeout(highlightText, 4000);
 
   // MutationObserver（デバウンス付き）
   let observerTimeout;
@@ -119,7 +117,7 @@ const REQUIRED_URL = 'gmo-office';
       if (!isProcessing) {
         highlightText();
       }
-    }, 1000);
+    }, 500);
   });
 
   // 監視開始
@@ -129,7 +127,6 @@ const REQUIRED_URL = 'gmo-office';
         childList: true,
         subtree: true
       });
-      console.log('MutationObserver開始');
     }
-  }, 1000);
+  }, 500);
 })();
