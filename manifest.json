@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Extensions Highlighter",
+  "version": "1.3",
+  "description": "extensionsという文字を赤い太文字にする拡張機能",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ]
+}
+
+
