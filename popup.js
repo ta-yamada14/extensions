@@ -1,9 +1,9 @@
 // デフォルト設定
 const DEFAULT_SETTINGS = {
-  targetWords: ['個人顧客', '2'],
-  highlightColor: 'red',
+  targetWords: ['顧客一', 'ログインID'],
+  highlightColor: 'green',
   useBold: true,
-  requiredUrls: ['gmo-office.com/?#/searchCustome'],
+  requiredUrls: ['searchCustomer'],
   urlMatchType: 'OR'
 };
 
