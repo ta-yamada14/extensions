@@ -1,8 +1,15 @@
 {
   "manifest_version": 3,
   "name": "BS helper",
-  "version": "1.5",
+  "version": "1.6",
   "description": "BSからの要望によって生まれた拡張機能",
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ハイライト設定"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
