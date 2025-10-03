@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "BS helper",
-  "version": "1.6",
-  "description": "BSからの要望によって生まれた拡張機能",
+  "name": "OS helper",
+  "version": "1.7",
+  "description": "ページ内の特定文字列を自動ハイライト表示。色・太字・URL条件を設定可能",
   "permissions": [
     "storage"
   ],

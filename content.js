@@ -126,9 +126,9 @@ const DEFAULT_SETTINGS = {
     }
 
     // React Adminの遅延レンダリング対応
+    setTimeout(highlightText, 200);
     setTimeout(highlightText, 500);
     setTimeout(highlightText, 1000);
-    setTimeout(highlightText, 2000);
 
     // MutationObserver（デバウンス付き）
     let observerTimeout;
