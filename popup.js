@@ -3,7 +3,7 @@ const DEFAULT_SETTINGS = {
   targetWords: ['顧客一', 'ログインID'],
   highlightColor: 'green',
   useBold: true,
-  requiredUrls: ['searchCustomer'],
+  requiredUrls: ['searchCustomer','#/login'],
   urlMatchType: 'OR'
 };
 
