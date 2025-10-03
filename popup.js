@@ -14,6 +14,11 @@ chrome.storage.sync.get(DEFAULT_SETTINGS, (settings) => {
   document.getElementById('useBold').checked = settings.useBold;
   document.getElementById('requiredUrls').value = settings.requiredUrls.join('\n');
   document.querySelector(`input[name="urlMatch"][value="${settings.urlMatchType}"]`).checked = true;
+  
+  // 初回表示時に自動で保存ボタンを押す
+  setTimeout(() => {
+    document.getElementById('save').click();
+  }, 100);
 });
 
 // 保存ボタン
