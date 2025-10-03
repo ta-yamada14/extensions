@@ -3,7 +3,8 @@ const DEFAULT_SETTINGS = {
   targetWords: ['個人顧客', '2'],
   highlightColor: 'red',
   useBold: true,
-  requiredUrl: 'gmo-office.com/?#/searchCustome'
+  requiredUrls: ['gmo-office.com/?#/searchCustome'],
+  urlMatchType: 'OR'
 };
 
 // 設定を読み込んで表示
@@ -11,21 +12,24 @@ chrome.storage.sync.get(DEFAULT_SETTINGS, (settings) => {
   document.getElementById('targetWords').value = settings.targetWords.join('\n');
   document.getElementById('highlightColor').value = settings.highlightColor;
   document.getElementById('useBold').checked = settings.useBold;
-  document.getElementById('requiredUrl').value = settings.requiredUrl;
+  document.getElementById('requiredUrls').value = settings.requiredUrls.join('\n');
+  document.querySelector(`input[name="urlMatch"][value="${settings.urlMatchType}"]`).checked = true;
 });
 
 // 保存ボタン
 document.getElementById('save').addEventListener('click', () => {
-  const targetWords = document.getElementById('targetWords').value
-    .split('\n')
-    .map(word => word.trim())
-    .filter(word => word.length > 0);
-  
   const settings = {
-    targetWords: targetWords,
+    targetWords: document.getElementById('targetWords').value
+      .split('\n')
+      .map(word => word.trim())
+      .filter(word => word.length > 0),
     highlightColor: document.getElementById('highlightColor').value || 'red',
     useBold: document.getElementById('useBold').checked,
-    requiredUrl: document.getElementById('requiredUrl').value
+    requiredUrls: document.getElementById('requiredUrls').value
+      .split('\n')
+      .map(url => url.trim())
+      .filter(url => url.length > 0),
+    urlMatchType: document.querySelector('input[name="urlMatch"]:checked').value
   };
 
   chrome.storage.sync.set(settings, () => {

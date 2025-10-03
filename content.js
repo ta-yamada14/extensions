@@ -8,41 +8,53 @@ const DEFAULT_SETTINGS = {
   targetWords: ['個人顧客', '2'],
   highlightColor: 'red',
   useBold: true,
-  requiredUrl: 'gmo-office.com/?#/searchCustome'
+  requiredUrls: ['gmo-office.com/?#/searchCustome'],
+  urlMatchType: 'OR'
 };
 
 (function() {
-  let TARGET_WORDS = [];
-  let HIGHLIGHT_COLOR = 'red';
-  let USE_BOLD = true;
-  let REQUIRED_URL = '';
+  let SETTINGS = null;
 
   // 設定を読み込んでハイライト実行
   function loadSettingsAndHighlight() {
     chrome.storage.sync.get(DEFAULT_SETTINGS, (settings) => {
-      TARGET_WORDS = settings.targetWords;
-      HIGHLIGHT_COLOR = settings.highlightColor;
-      USE_BOLD = settings.useBold;
-      REQUIRED_URL = settings.requiredUrl;
+      // URLチェック
+      if (settings.requiredUrls && settings.requiredUrls.length > 0) {
+        const currentUrl = window.location.href;
+        const matchType = settings.urlMatchType || 'OR';
+        
+        if (matchType === 'AND') {
+          // AND条件：全てのURLが含まれている必要がある
+          const allMatch = settings.requiredUrls.every(url => currentUrl.includes(url));
+          if (!allMatch) return;
+        } else {
+          // OR条件：いずれかのURLが含まれている必要がある
+          const anyMatch = settings.requiredUrls.some(url => currentUrl.includes(url));
+          if (!anyMatch) return;
+        }
+      }
       
-      // 設定読み込み後にハイライト実行
-      initHighlight();
+      // 対象文字列が空でない場合のみ設定を保存
+      if (settings.targetWords && settings.targetWords.length > 0) {
+        SETTINGS = settings;
+        initHighlight();
+      }
     });
   }
 
   function initHighlight() {
-    // URLチェック
-    if (REQUIRED_URL && !window.location.href.includes(REQUIRED_URL)) {
-      return;
-    }
+    if (!SETTINGS) return;
 
     let isProcessing = false;
+    const TARGET_WORDS = SETTINGS.targetWords;
+    const HIGHLIGHT_COLOR = SETTINGS.highlightColor;
+    const USE_BOLD = SETTINGS.useBold;
 
     function highlightText() {
-    if (isProcessing) {
-      return;
-    }
-    
+      if (isProcessing) {
+        return;
+      }
+      
       isProcessing = true;
       
       try {
